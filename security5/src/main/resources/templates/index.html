@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spring Security</title>
+</head>
+<body>
+    <h1>Spring Security</h1>
+    <h3>version 5</h3>
+    <hr>
+
+    <h5>ID : <span th:text="${ #authentication.name }"></span></h5>
+    <form action="/logout" method="post">
+        <!-- 💎 CSRF TOKEN -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+        <button type="submit">로그아웃</button>
+    </form>
+
+    <ul>
+        <li><a href="/user">사용자</a></li>
+        <li><a href="/admin">관리자</a></li>
+    </ul>
+
+    <ul>
+        <li><a href="/login">로그인</a></li>
+        <li><a href="/join">회원가입</a></li>
+    </ul>
+
+</body>
+</html>
