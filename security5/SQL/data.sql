@@ -1,4 +1,8 @@
 -- 기본 데이터
+TRUNCATE TABLE `user`;
+TRUNCATE TABLE `user_auth`;
+
+
 
 -- BCryptPasswordEncoder - 암호화 시
 -- 사용자

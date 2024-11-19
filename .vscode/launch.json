@@ -9,6 +9,16 @@
             "projectName": "security5",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Security6Application<security6>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.aloha.security6.Security6Application",
+            "projectName": "security6",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
