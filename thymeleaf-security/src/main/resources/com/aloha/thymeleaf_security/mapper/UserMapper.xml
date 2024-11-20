@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aloha.thymeleaf_security.mapper.UserMapper">
+
+    <resultMap type="Users" id="userMap">
+        <id property="no" column="no" />
+        
+        <result property="no" column="no" />
+        <result property="username" column="username" />
+        <result property="password" column="password" />
+        <result property="name" column="name" />
+        <result property="email" column="email" />
+        <result property="enabled" column="enabled" />
+        <result property="createdAt" column="created_at" />
+        <result property="updatedAt" column="updated_at" />
+        
+        <collection property="authList" resultMap="authMap"></collection>
+    </resultMap>
+        
+    <resultMap type="UserAuth" id="authMap">
+        <result property="no" column="no" />
+        <result property="username" column="username" />
+        <result property="auth" column="auth" />
+    </resultMap>
+
+  
+    <!-- 회원 조회 - id -->
+    <select id="select" resultMap="userMap">
+        SELECT u.no
+              ,u.username
+              ,password
+              ,name
+              ,email
+              ,enabled
+              ,created_at
+              ,updated_at
+              ,auth
+        FROM user u LEFT OUTER JOIN user_auth auth ON u.username = auth.username
+        WHERE u.username = #{username}
+    </select>
+
+    <!-- 회원 가입 -->
+    <insert id="join">
+        INSERT INTO user ( username, password, name, email )
+        VALUES ( #{username}, #{password}, #{name}, #{email} )
+    </insert>
+
+    <!-- 회원 정보 수정 -->
+    <update id="update">
+        UPDATE user
+           SET name = #{name}
+              ,email = #{email}
+              ,updated_at = now()
+        WHERE username = #{username}
+    </update>
+
+    <!-- 회원 권한 등록 -->
+    <insert id="insertAuth">
+        INSERT INTO user_auth( username, auth )
+        VALUES ( #{username}, #{auth} )
+    </insert>
+
+</mapper>

@@ -1,4 +1,4 @@
-package com.aloha.security6.config;
+package com.aloha.thymeleaf_security.config;
 
 import javax.sql.DataSource;
 
@@ -16,10 +16,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
-import com.aloha.security6.security.CustomAccessDeniedHandler;
-import com.aloha.security6.security.LoginFailureHandler;
-import com.aloha.security6.security.LoginSuccessHandler;
-import com.aloha.security6.service.UserDetailServiceImpl;
+import com.aloha.thymeleaf_security.security.CustomAccessDeniedHandler;
+import com.aloha.thymeleaf_security.security.LoginFailureHandler;
+import com.aloha.thymeleaf_security.security.LoginSuccessHandler;
+import com.aloha.thymeleaf_security.service.UserDetailServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
 

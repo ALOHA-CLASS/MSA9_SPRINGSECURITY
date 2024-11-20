@@ -19,6 +19,16 @@
             "projectName": "security6",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ThymeleafSecurityApplication<thymeleaf-security>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.aloha.thymeleaf_security.ThymeleafSecurityApplication",
+            "projectName": "thymeleaf-security",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
