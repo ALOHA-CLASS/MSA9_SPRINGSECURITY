@@ -29,6 +29,16 @@
             "projectName": "thymeleaf-security",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Security6Application<security-method>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.aloha.security_method.Security6Application",
+            "projectName": "security-method",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
