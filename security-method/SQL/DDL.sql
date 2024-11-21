@@ -1,3 +1,17 @@
+
+
+-- ###################################################################################
+-- 외래키 삭제
+-- ⭐ 최초 생성시 주석처리(SKIP)
+SET FOREIGN_KEY_CHECKS = 0;
+ALTER TABLE `board` DROP FOREIGN KEY `FK_users_TO_board_1`;
+ALTER TABLE `comments` DROP FOREIGN KEY `FK_board_TO_comments_1`;
+ALTER TABLE `comments` DROP FOREIGN KEY `FK_users_TO_comments_1`;
+-- ###################################################################################
+
+
+
+
 DROP TABLE IF EXISTS `user`;
 
 CREATE TABLE `user` (
@@ -40,7 +54,6 @@ CREATE TABLE `board` (
 	`no`	BIGINT	NOT NULL AUTO_INCREMENT PRIMARY KEY	COMMENT 'PK',
 	`id`	VARCHAR(255)	NOT NULL	COMMENT 'UK',
 	`title`	VARCHAR(100)	NOT NULL	COMMENT '제목',
-	-- `writer`	VARCHAR(100)	NOT NULL	COMMENT '작성자',
     `user_no`	BIGINT	NOT NULL	COMMENT '회원PK',
 	`content`	TEXT	NULL	COMMENT '내용',
 	`created_at`	TIMESTAMP	NOT NULL	DEFAULT CURRENT_TIMESTAMP	COMMENT '등록일자',
@@ -78,9 +91,9 @@ DROP TABLE IF EXISTS `comments`;
 CREATE TABLE `comments` (
 	`no`	BIGINT	NOT NULL AUTO_INCREMENT PRIMARY KEY	COMMENT 'PK',
 	`id`	VARCHAR(255)	NOT NULL	COMMENT 'UK',
-	`board_no`	BIGINT	NOT NULL	COMMENT '외래키',
+	`board_no`	BIGINT	NOT NULL	COMMENT '게시글 PK',
 	`parent_no`	BIGINT	NOT NULL	COMMENT '부모 댓글 번호',
-	`writer`	VARCHAR(100)	NOT NULL	COMMENT '작성자',
+    `user_no`	BIGINT	NOT NULL	COMMENT '회원PK',
 	`content`	TEXT	NULL	COMMENT '내용',
 	`created_at`	TIMESTAMP	NOT NULL	DEFAULT CURRENT_TIMESTAMP	COMMENT '등록일자',
 	`updated_at`	TIMESTAMP	NOT NULL	DEFAULT CURRENT_TIMESTAMP	COMMENT '수정일자'
@@ -88,6 +101,23 @@ CREATE TABLE `comments` (
 
 
 
+ALTER TABLE `comments` ADD CONSTRAINT `FK_board_TO_comments_1` FOREIGN KEY (
+	`board_no`
+)
+REFERENCES `board` (
+	`no`
+)
+ON DELETE CASCADE
+;
+
+ALTER TABLE `comments` ADD CONSTRAINT `FK_users_TO_comments_1` FOREIGN KEY (
+	`user_no`
+)
+REFERENCES `users` (
+	`no`
+)
+ON DELETE CASCADE
+;
 
 
 
@@ -99,27 +129,4 @@ CREATE TABLE `comments` (
 
 
 
-
-
-
-
-
-
-
-
--- ALTER TABLE `board` ADD CONSTRAINT `PK_BOARD` PRIMARY KEY (
--- 	`no`
--- );
-
--- ALTER TABLE `common` ADD CONSTRAINT `PK_COMMON` PRIMARY KEY (
--- 	`no`
--- );
-
--- ALTER TABLE `files` ADD CONSTRAINT `PK_FILES` PRIMARY KEY (
--- 	`no`
--- );
-
--- ALTER TABLE `comments` ADD CONSTRAINT `PK_COMMENTS` PRIMARY KEY (
--- 	`no`
--- );
 

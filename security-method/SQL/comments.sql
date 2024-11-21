@@ -5,10 +5,30 @@ CREATE TABLE `comments` (
 	`id`	VARCHAR(255)	NOT NULL	COMMENT 'UK',
 	`board_no`	BIGINT	NOT NULL	COMMENT '외래키',
 	`parent_no`	BIGINT	NOT NULL	COMMENT '부모 댓글 번호',
-	`writer`	VARCHAR(100)	NOT NULL	COMMENT '작성자',
+	-- `writer`	VARCHAR(100)	NOT NULL	COMMENT '작성자',
+    `user_no`	BIGINT	NOT NULL	COMMENT '회원PK',
 	`content`	TEXT	NULL	COMMENT '내용',
 	`created_at`	TIMESTAMP	NOT NULL	DEFAULT CURRENT_TIMESTAMP	COMMENT '등록일자',
 	`updated_at`	TIMESTAMP	NOT NULL	DEFAULT CURRENT_TIMESTAMP	COMMENT '수정일자'
 );
 
+
+
+ALTER TABLE `comments` ADD CONSTRAINT `FK_board_TO_comments_1` FOREIGN KEY (
+	`board_no`
+)
+REFERENCES `board` (
+	`no`
+)
+ON DELETE CASCADE
+;
+
+ALTER TABLE `comments` ADD CONSTRAINT `FK_users_TO_comments_1` FOREIGN KEY (
+	`user_no`
+)
+REFERENCES `users` (
+	`no`
+)
+ON DELETE CASCADE
+;
 
