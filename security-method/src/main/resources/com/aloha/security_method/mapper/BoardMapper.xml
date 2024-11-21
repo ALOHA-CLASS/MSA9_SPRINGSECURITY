@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace="매퍼 인터페이스 경로" -->
+<mapper namespace="com.aloha.security_method.mapper.BoardMapper">
+
+    <!-- <resultMap id="BoardMap" type="com.aloha.security_method.domain.Board"> -->
+    <resultMap id="BoardMap" type="Board">
+        <!-- Board 필드 매핑 -->
+        <id property="no" column="no" />
+        <result property="id" column="id" />
+        <result property="title" column="title" />
+        <result property="content" column="content" />
+        <result property="userNo" column="user_no" />
+        <result property="createdAt" column="created_at" />
+        <result property="updatedAt" column="updated_at" />
+
+        <!-- Users 객체 매핑 -->
+        <!-- <association property="user" javaType="com.aloha.security_method.domain.Users"> -->
+        <association property="user" javaType="Users">
+            <id property="no" column="user_no" />
+            <result property="name" column="name" />
+            <result property="username" column="username"/>
+        </association>
+    </resultMap>
+
+    <!-- 목록 -->
+    <!-- <select id="list" resultType="Board"> -->
+    <select id="list" resultMap="BoardMap">
+        SELECT b.*
+            ,u.no user_no
+            ,u.name
+            ,u.username 
+        FROM board b JOIN user u ON b.user_no = u.no
+        WHERE 
+            <if test="option.code == 0">
+                    title LIKE CONCAT('%', #{option.keyword}, '%')
+                OR content LIKE CONCAT('%', #{option.keyword}, '%') 
+            </if>
+            <if test="option.code == 1">
+                    title LIKE CONCAT('%', #{option.keyword}, '%')
+            </if>
+            <if test="option.code == 2">
+                content LIKE CONCAT('%', #{option.keyword}, '%') 
+            </if>
+            <if test="option.code == 3">
+                    title LIKE CONCAT('%', #{option.keyword}, '%')
+                OR content LIKE CONCAT('%', #{option.keyword}, '%') 
+            </if>
+            <if test="option.code == 4">
+            </if>
+        <if test="option.orderCode == 0 ">
+            ORDER BY created_at DESC
+        </if>
+        <if test="option.orderCode == 1 ">
+            ORDER BY title ASC
+        </if>
+
+        LIMIT #{page.index}, #{page.rows}
+    </select>
+
+    <!-- 조회 -->
+    <!-- <select id="select" resultType="Board" > -->
+    <select id="select" resultMap="BoardMap" >
+         SELECT b.*
+                ,u.no user_no
+                ,u.name
+                ,u.username 
+        FROM board b JOIN user u ON b.user_no = u.no
+        WHERE id = #{id}
+    </select>
+
+    <!-- 등록 -->
+    <!-- ⭐Mybatis 의 useGeneratedKeys 를 사용하면
+          MySQL 의 AUTO_INCREMENT 되는 값을 전달한 객체에 지정한 변수로 매핑할 수 있다.    
+     -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="no">
+        INSERT INTO board ( id, title, user_no, content )
+        VALUES ( #{id}, #{title}, #{userNo}, #{content} )
+    </insert>
+
+    <!-- 수정 -->
+    <update id="update">
+        UPDATE board 
+           SET title = #{title}
+              ,content = #{content}
+              ,updated_at = now()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 삭제 -->
+    <delete id="delete">
+        DELETE FROM board
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 데이터 개수 -->
+    <select id="count" resultType="int">
+        SELECT COUNT(*)
+          FROM board
+        WHERE 
+            <if test="option.code == 0">
+                    title LIKE CONCAT('%', #{option.keyword}, '%')
+                OR content LIKE CONCAT('%', #{option.keyword}, '%') 
+            </if>
+            <if test="option.code == 1">
+                    title LIKE CONCAT('%', #{option.keyword}, '%')
+            </if>
+            <if test="option.code == 2">
+                content LIKE CONCAT('%', #{option.keyword}, '%') 
+            </if>
+            <if test="option.code == 3">
+                    title LIKE CONCAT('%', #{option.keyword}, '%')
+                OR content LIKE CONCAT('%', #{option.keyword}, '%') 
+            </if>
+            <if test="option.code == 4">
+            </if>
+    </select>
+		
+
+</mapper>

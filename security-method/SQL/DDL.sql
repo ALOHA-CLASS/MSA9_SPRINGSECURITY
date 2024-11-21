@@ -3,10 +3,10 @@
 -- ###################################################################################
 -- 외래키 삭제
 -- ⭐ 최초 생성시 주석처리(SKIP)
-SET FOREIGN_KEY_CHECKS = 0;
-ALTER TABLE `board` DROP FOREIGN KEY `FK_users_TO_board_1`;
-ALTER TABLE `comments` DROP FOREIGN KEY `FK_board_TO_comments_1`;
-ALTER TABLE `comments` DROP FOREIGN KEY `FK_users_TO_comments_1`;
+-- SET FOREIGN_KEY_CHECKS = 0;
+-- ALTER TABLE `board` DROP FOREIGN KEY `FK_user_TO_board_1`;
+-- ALTER TABLE `comments` DROP FOREIGN KEY `FK_board_TO_comments_1`;
+-- ALTER TABLE `comments` DROP FOREIGN KEY `FK_user_TO_comments_1`;
 -- ###################################################################################
 
 
@@ -61,10 +61,10 @@ CREATE TABLE `board` (
 );
 
 
-ALTER TABLE `board` ADD CONSTRAINT `FK_users_TO_board_1` FOREIGN KEY (
+ALTER TABLE `board` ADD CONSTRAINT `FK_user_TO_board_1` FOREIGN KEY (
 	`user_no`
 )
-REFERENCES `users` (
+REFERENCES `user` (
 	`no`
 )
 ON DELETE CASCADE
@@ -110,10 +110,10 @@ REFERENCES `board` (
 ON DELETE CASCADE
 ;
 
-ALTER TABLE `comments` ADD CONSTRAINT `FK_users_TO_comments_1` FOREIGN KEY (
+ALTER TABLE `comments` ADD CONSTRAINT `FK_user_TO_comments_1` FOREIGN KEY (
 	`user_no`
 )
-REFERENCES `users` (
+REFERENCES `user` (
 	`no`
 )
 ON DELETE CASCADE

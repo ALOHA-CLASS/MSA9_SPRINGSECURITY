@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 등록</title>
+</head>
+<body>
+    <h1>게시글 등록</h1>
+    <form action="" method="post" enctype="multipart/form-data">
+        <!-- 💎 CSRF TOKEN -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+
+        <!-- 
+            
+            ⛔ 보안 위험
+            userNo 가져올 수 도 있지만, 클라이언트 단에 user PK (no) 노출하는 것은 보안상 위험
+            공격자가 userNo 값을 변경해 다른 사용자의 데이터로 요청을 보내는 것을 허용하게 되어 위험
+
+            💞 중복 데이터
+            이미 세션에서 관리되고 있으므로 중복된 데이터 요청
+            
+        -->
+        <!-- <input type="hidden" name="userNo" th:value="${customUser.user.no}"> -->
+        <table border="1">
+            <tr>
+                <th>제목</th>
+                <td>
+                    <input type="text" name="title">
+                </td>
+            </tr>
+            <tr>
+                <th>작성자</th>
+                <td>
+                    <input type="text" name="writer" th:value="${customUser.user.name}" disabled>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <textarea name="content" rows="5" cols="40"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>파일</td>
+                <td>
+                    <input type="file" name="fileList" multiple>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" value="등록">
+                </td>
+            </tr>
+        </table>
+
+    </form>
+</body>
+</html>

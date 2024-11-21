@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace="매퍼 인터페이스 경로" -->
+<mapper namespace="com.aloha.security_method.mapper.CommentMapper">
+
+    <!-- 목록 -->
+    <select id="list" resultType="Comments">
+        SELECT *
+        FROM comments
+    </select>
+
+    <!-- 조회 -->
+    <select id="select" resultType="Comments">
+        SELECT *
+        FROM comments
+        WHERE id = #{id}
+    </select>
+
+    <!-- 등록 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="no">
+        INSERT INTO comments( id, board_no, parent_no, writer, content )
+        VALUES ( #{id}, #{boardNo}, #{parentNo}, #{writer}, #{content} )
+    </insert>
+
+    <!-- 수정 -->
+    <update id="update">
+        UPDATE comments
+          SET parent_no = #{parentNo}
+             ,writer = #{writer}
+             ,content = #{content}
+             ,updated_at = now()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 삭제 -->
+    <delete id="delete"> 
+        DELETE FROM comments
+        WHERE id = #{id}
+    </delete>
+		
+    <!-- 게시글 기준 목록 -->
+    <select id="listByParent" resultType="Comments">
+        SELECT *
+        FROM comments
+        WHERE board_no = #{boardNo}
+        ORDER BY parent_no DESC
+                ,created_at ASC
+    </select>
+
+    <!-- 게시글 기준 삭제 -->
+    <delete id="deleteByParent">
+        DELETE FROM comments
+        WHERE board_no = #{boardNo}
+    </delete>
+
+    <!-- 답글 목록 -->
+    <select id="replyList" resultType="Comments">
+        SELECT *
+        FROM comments
+        WHERE parent_no = #{parentNo}
+          AND no != #{parentNo}
+    </select>
+
+    <!-- parentNo 기준 댓글 삭제 -->
+    <delete id="deleteReplyByParent"> 
+        DELETE FROM comments
+        WHERE parent_no = #{parentNo}
+    </delete>
+
+
+</mapper>

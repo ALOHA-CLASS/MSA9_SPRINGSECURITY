@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 수정</title>
+</head>
+<body>
+    <h1>게시글 수정</h1>
+    <form action="/board/update" method="post" id="form">
+        <input type="hidden" name="id" th:value="${board.id}">
+        <table border="1">
+            <tr>
+                <th>제목</th>
+                <td>
+                    <input type="text" name="title" th:value="${board.title}">
+                </td>
+            </tr>
+            <tr>
+                <th>작성자</th>
+                <td>
+                    <input type="text" name="writer" th:value="${customUser.user.name}" disabled>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <textarea name="content" rows="5" cols="40" th:text="${board.content}"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="submit">수정</button>
+                    <button type="button" onclick="remove()">삭제</button>
+                    <button type="button" onclick="location.href='/board/list'">목록</button>
+                </td>
+            </tr>
+        </table>
+        <h3>파일목록</h3>
+        <section id="file-list">
+            <table border="1">
+                <tr>
+                    <th>no</th>
+                    <th>
+                        <input type="checkbox" id="delete-all" onclick="checkAll()">
+                    </th>
+                    <th>이미지</th>
+                    <th>파일명</th>
+                    <th>용량</th>
+                    <th>타입</th>
+                    <th>액션</th>
+                </tr>
+                <th:block th:each="file : ${fileList}">
+                    <tr>
+                        <td><span th:text="${file.no}"></span></td>
+                        <td>
+                            <input type="checkbox" class="delete-file" name="deleteFiles" th:value="${file.id}">
+                        </td>
+                        <td>
+                            <img th:src="|/img?id=${file.id}|" height="100"  alt="파일 이미지">
+                        </td>
+                        <td><span th:text="${file.fileName}"></span></td>
+                        <td><span th:text="${file.fileSize}"></span></td>
+                        <td><span th:text="${file.type}"></span></td>
+                        <td>
+                            <button type="button" th:onclick="download( [[${file.id}]] )">다운로드</button>
+                            <button type="button" th:onclick="removeFile( this, [[${file.id}]] )">삭제</button>
+                        </td>
+                    </tr>
+                </th:block>
+            </table>
+        </section>
+    </form>
+
+    <script>
+        const form = document.getElementById('form')
+
+        // 게시글 삭제
+        function remove() {
+            if( !confirm('정말로 삭제하시겠습니까?') )
+                return
+            
+            form.action = '/board/delete'   // action 속성 변경
+            form.submit()                   // 요청 전송
+        }
+
+
+         // 다운로드
+         function download( id ) {
+            location.href = `/file/${id}`
+        }
+
+        // 파일 삭제
+        function removeFile( element, id ) {
+            let request = new XMLHttpRequest()
+
+            request.onreadystatechange = function() {
+
+                // 요청 완료 및 성공
+                if( request.readyState == request.DONE && request.status == 200 ) {
+                    let response = request.responseText
+                    if( response == 'SUCCESS' ) {
+                        alert('파일 삭제 성공')
+                        // 파일 목록 갱신
+                        // 방법1 - 페이지 새로고침
+                        // location.reload()
+
+                        // 방법2 - DOM 으로 파일항목 행 삭제
+                        // element.parentNode.parentNode.remove()  // button > td > tr
+                        
+                        // 방법3 - 파일목록 비동기로 요청
+                        // 1️⃣ JSON 데이터를 받고 렌더링
+                        // 2️⃣ 파일목록 뷰(html)를 응답받아 렌더링 ⭐
+                        getFileList()
+                    }
+                    else {
+                        alert('파일 삭제 실패')
+                    }
+                }
+            }
+            const url = `/file/${id}`
+            request.open('DELETE', url, true)
+            request.send()
+        }
+
+        // 파일 목록 비동기 요청 
+        function getFileList() {
+            let parentTable = 'board'
+            let parentNo = '[[${board.no}]]'
+            let url = `/file?parentTable=${parentTable}&parentNo=${parentNo}`
+
+            let request = new XMLHttpRequest()
+
+            request.onreadystatechange = function() {
+                if( request.readyState == request.DONE && request.status == 200 ) {
+                    console.log('파일 목록 갱신 성공');
+                    let fileList = request.responseText
+                    let $fileList = document.getElementById('file-list')
+                    $fileList.innerHTML = ""        // 기본 파일 목록 비우기
+                    $fileList.innerHTML = fileList  // 새로 조회한 파일목록으로 갱신
+                }
+            }
+            request.open('GET', url, true)
+            request.send()
+        }
+
+        // 전체 선택 - 삭제할 파일 전부 선택
+        function checkAll() {
+            // 전체 체크박스 ✅
+            const $deleteAll = document.getElementById('delete-all')
+
+            // 개별 파일 삭제 체크박스 ✅
+            const $deleteFile = document.getElementsByClassName('delete-file')
+
+            // 전체 선택
+            if( $deleteAll.checked ) {
+                for (let i = 0; i < $deleteFile.length; i++) {
+                    const checkbox = $deleteFile[i];
+                    checkbox.checked = true
+                }
+            }
+            // 전체 선택 해제
+            else {
+                for (let i = 0; i < $deleteFile.length; i++) {
+                    const checkbox = $deleteFile[i];
+                    checkbox.checked = false
+                }
+            }
+        }
+
+        
+    </script>
+</body>
+</html>

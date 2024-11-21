@@ -44,6 +44,10 @@
                 </div>
             </div>
 
+            <div class="d-grid gap-2 my-3">
+                <a href="/board/list" class="btn btn-lg btn-outline-primary">게시판</a>
+            </div>
+
             <form action="/logout" method="post">
                 <!-- CSRF TOKEN -->
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
