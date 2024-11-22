@@ -29,7 +29,14 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <button type="button" th:onclick="update()">수정</button>
+                    <!-- 👮‍♀️ 관리자 -->
+                    <th:block sec:authorize="( hasRole('ADMIN') )">
+                        <button type="button" th:onclick="update()">수정</button>
+                    </th:block>
+                    <!-- 👩‍🏫게시글 소유자 -->
+                    <th:block th:if="${ @BoardService.isOwner( board.id, #authentication.principal.user.no) }">
+                        <button type="button" th:onclick="update()">수정</button>
+                    </th:block>
                     <button type="button" onclick="location.href='/board/list'">목록</button>
                 </td>
             </tr>
@@ -47,7 +54,7 @@
                     <th>타입</th>
                     <th>액션</th>
                 </tr>
-                <th:block th:if="${fileList.isEmpty()}">
+                <th:block th:if="${fileList == null || fileList.isEmpty()}">
                     <tr>
                         <td colspan="6" align="center">조회된 데이터가 없습니다.</td>
                     </tr>

@@ -5,7 +5,7 @@
 
 <mapper namespace="com.aloha.thymeleaf_security.mapper.UserMapper">
 
-    <resultMap type="Users" id="userMap">
+    <resultMap id="userMap" type="com.aloha.thymeleaf_security.domain.Users">
         <id property="no" column="no" />
         
         <result property="no" column="no" />
@@ -20,13 +20,13 @@
         <collection property="authList" resultMap="authMap"></collection>
     </resultMap>
         
-    <resultMap type="UserAuth" id="authMap">
+    <resultMap id="authMap" type="UserAuth">
         <result property="no" column="no" />
         <result property="username" column="username" />
         <result property="auth" column="auth" />
     </resultMap>
 
-  
+
     <!-- 회원 조회 - id -->
     <select id="select" resultMap="userMap">
         SELECT u.no

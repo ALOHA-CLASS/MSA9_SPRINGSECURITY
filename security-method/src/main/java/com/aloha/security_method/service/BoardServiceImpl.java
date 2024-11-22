@@ -129,6 +129,11 @@ public class BoardServiceImpl implements BoardService {
         return boardMapper.count(option);
     }
 
+    /**
+     *  @param id : 게시글 id, userNo : 회원 no (PK)
+     *  게시글 id로 작성자 userNo 를 조회하여,
+     *  인증된 사용자 no 와 일치하는지 확인
+     */
     @Override
     public boolean isOwner(String id, Long userNo) throws Exception {
         log.info("isOwner - id : " + id);

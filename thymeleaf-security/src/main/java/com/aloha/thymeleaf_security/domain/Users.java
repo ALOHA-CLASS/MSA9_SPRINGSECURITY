@@ -3,9 +3,12 @@ package com.aloha.thymeleaf_security.domain;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.ibatis.type.Alias;
+
 import lombok.Data;
 
 @Data
+@Alias("Users")
 public class Users {
     private Long no;
     private String username;

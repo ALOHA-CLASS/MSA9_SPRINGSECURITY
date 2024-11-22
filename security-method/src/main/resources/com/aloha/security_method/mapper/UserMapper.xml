@@ -5,10 +5,8 @@
 
 <mapper namespace="com.aloha.security_method.mapper.UserMapper">
 
-    <resultMap type="Users" id="userMap">
+    <resultMap id="UserMap" type="com.aloha.security_method.domain.Users">
         <id property="no" column="no" />
-        
-        <result property="no" column="no" />
         <result property="username" column="username" />
         <result property="password" column="password" />
         <result property="name" column="name" />
@@ -17,30 +15,52 @@
         <result property="createdAt" column="created_at" />
         <result property="updatedAt" column="updated_at" />
         
-        <collection property="authList" resultMap="authMap"></collection>
+        <!-- <collection property="authList" resultMap="authMap"></collection> -->
+        <collection property="authList" select="selectAuthList" column="username" javaType="list" ofType="com.car.ckauto.domain.users.UserAuth" ></collection>
     </resultMap>
         
-    <resultMap type="UserAuth" id="authMap">
-        <result property="no" column="no" />
+    <resultMap id="authMap" type="UserAuth">
+        <id property="no" column="auth_no" />
+        <result property="id" column="auth_id" />
         <result property="username" column="username" />
+        <result property="userNo" column="user_no" />
         <result property="auth" column="auth" />
+        <result property="createdAt" column="created_at" />
+        <result property="updatedAt" column="updated_at" />
     </resultMap>
 
-  
+
+    <!-- NO JOIN -->
+    <select id="select" resultMap="UserMap">
+        SELECT *
+        FROM user u
+        WHERE u.username = #{username}
+    </select>
+
+    <select id="selectAuthList" resultType="UserAuth">
+        SELECT *
+        FROM user_auth
+        WHERE username = #{username}
+    </select>
+
+
     <!-- 회원 조회 - id -->
-    <select id="select" resultMap="userMap">
+    <!-- <select id="select" resultMap="UserMap">
         SELECT u.no
               ,u.username
               ,password
               ,name
               ,email
               ,enabled
-              ,created_at
-              ,updated_at
-              ,auth
+              ,u.created_at
+              ,u.updated_at
+              ,auth.no auth_no
+              ,auth.id auth_id
+              ,auth.user_no
+              ,auth.auth auth
         FROM user u LEFT OUTER JOIN user_auth auth ON u.username = auth.username
         WHERE u.username = #{username}
-    </select>
+    </select> -->
 
     <!-- 회원 가입 -->
     <insert id="join">

@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS `user`;
 
 CREATE TABLE `user` (
   `NO` bigint NOT NULL AUTO_INCREMENT,
+  `id`	VARCHAR(255)	NOT NULL	COMMENT 'UK',
   `USERNAME` varchar(100) NOT NULL,
   `PASSWORD` varchar(200) NOT NULL,
   `NAME` varchar(100) NOT NULL,

@@ -18,12 +18,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updatedAt" column="updated_at" />
 
         <!-- Users 객체 매핑 -->
-        <!-- <association property="user" javaType="com.aloha.security_method.domain.Users"> -->
-        <association property="user" javaType="Users">
+        <!-- <association property="user" javaType="com.aloha.security_method.domain.Users"></association> -->
+        <!-- <association property="user" javaType="com.aloha.security_method.domain.Users"></association> -->
+        <association property="user" select="selectUser" column="user_no" javaType="com.aloha.security_method.domain.Users"></association>
+        
+        <!-- <association property="user" javaType="Users">
             <id property="no" column="user_no" />
             <result property="name" column="name" />
             <result property="username" column="username"/>
-        </association>
+
+            <collection property="authList" resultMap="com.aloha.security_method.mapper.UserMapper.authMap"></collection>
+        </association> -->
     </resultMap>
 
     <!-- 목록 -->
@@ -33,7 +38,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             ,u.no user_no
             ,u.name
             ,u.username 
-        FROM board b JOIN user u ON b.user_no = u.no
+            ,auth.no auth_no
+            ,auth.id auth_id
+            ,auth.user_no
+            ,auth.auth auth
+        FROM board b 
+                    JOIN user u ON b.user_no = u.no
+                    LEFT JOIN user_auth auth ON u.username = auth.username
         WHERE 
             <if test="option.code == 0">
                     title LIKE CONCAT('%', #{option.keyword}, '%')
@@ -69,7 +80,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 ,u.name
                 ,u.username 
         FROM board b JOIN user u ON b.user_no = u.no
-        WHERE id = #{id}
+        WHERE b.id = #{id}
     </select>
 
     <!-- 등록 -->
@@ -118,6 +129,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="option.code == 4">
             </if>
     </select>
+
+
+    <select id="selectUser" resultMap="com.aloha.security_method.mapper.UserMapper.UserMap">
+        SELECT *
+        FROM user u
+        WHERE u.no = #{user_no}
+    </select>
+<!-- 
+
+    
+    <select id="selectUser" resultMap="com.aloha.security_method.mapper.UserMapper.UserMap">
+        SELECT u.no
+              ,u.username
+              ,password
+              ,name
+              ,email
+              ,enabled
+              ,u.created_at
+              ,u.updated_at
+              ,auth.no auth_no
+              ,auth.id auth_id
+              ,auth.user_no
+              ,auth.auth auth
+        FROM user u LEFT OUTER JOIN user_auth auth ON u.username = auth.username
+        WHERE u.no = #{user_no}
+    </select> -->
+
+
 		
 
 </mapper>

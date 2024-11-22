@@ -3,17 +3,15 @@ package com.aloha.security_method.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -25,8 +23,7 @@ import com.aloha.security_method.domain.Page;
 import com.aloha.security_method.service.BoardService;
 import com.aloha.security_method.service.FileService;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import lombok.extern.slf4j.Slf4j;
 
 
 
@@ -124,6 +121,7 @@ public class BoardController {
      * 등록
      * @return
      */
+    @Secured("ROLE_USER")
     @GetMapping("/insert")
     public String insert() {
 
@@ -136,6 +134,7 @@ public class BoardController {
      * @return
      * @throws Exception 
     */
+    @Secured("ROLE_USER")
     @PostMapping("/insert")
     public String insertPost(@AuthenticationPrincipal CustomUser customUser
                             , Board board ) throws Exception {
@@ -159,11 +158,11 @@ public class BoardController {
      * 여기서는 요청 파라미터로 넘어온 id ➡ #p0 
      * "@빈이름" 형태로 특정 빈의 메소드를 호출할 수 있다.
      * @Service("BoardService")
-    */
+     */
     @PreAuthorize("( hasRole('ADMIN')) or (#p0  != null and @BoardService.isOwner(#p0, authentication.principal.user.no))")
     @GetMapping("/update")
     public String update(
-                        @RequestParam("id") String id
+                        @RequestParam(name = "id") String id
                        , Model model
                        , Files file
                        ) throws Exception {
@@ -187,7 +186,11 @@ public class BoardController {
      * @param board
      * @return
      * @throws Exception 
+     * 💛💛💛 #p0, #p1 로 파라미터 인덱스를 지정하여, 가져올 수 있다.
+     * #p0.id  ➡ board.id
+     * 여기서는, board 객체의 id를 가져온다
     */
+    @PreAuthorize("( hasRole('ADMIN')) or (#p0.id  != null and @BoardService.isOwner(#p0.id, authentication.principal.user.no))")
     @PostMapping("/update")
     public String updatePost(Board board) throws Exception {
         int result = boardService.update(board);
@@ -198,6 +201,7 @@ public class BoardController {
     }
     
     // 삭제 처리
+    @PreAuthorize("( hasRole('ADMIN')) or (#p0  != null and @BoardService.isOwner(#p0, authentication.principal.user.no))")
     @PostMapping("/delete")
     public String delete(@RequestParam("id") String id) throws Exception {
         int result = boardService.delete(id);
