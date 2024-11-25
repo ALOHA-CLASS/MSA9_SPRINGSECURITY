@@ -16,7 +16,8 @@
         <result property="updatedAt" column="updated_at" />
         
         <!-- <collection property="authList" resultMap="authMap"></collection> -->
-        <collection property="authList" select="selectAuthList" column="username" javaType="list" ofType="com.car.ckauto.domain.users.UserAuth" ></collection>
+        <collection property="authList" select="selectAuthList" column="username" 
+                    javaType="list" ofType="com.car.ckauto.domain.users.UserAuth" ></collection>
     </resultMap>
         
     <resultMap id="authMap" type="UserAuth">

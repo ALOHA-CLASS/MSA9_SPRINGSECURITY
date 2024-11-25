@@ -19,9 +19,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
         <!-- Users 객체 매핑 -->
         <!-- <association property="user" javaType="com.aloha.security_method.domain.Users"></association> -->
-        <!-- <association property="user" javaType="com.aloha.security_method.domain.Users"></association> -->
+        
         <association property="user" select="selectUser" column="user_no" javaType="com.aloha.security_method.domain.Users"></association>
         
+        <!-- board : user = 1 : 1 -->
         <!-- <association property="user" javaType="Users">
             <id property="no" column="user_no" />
             <result property="name" column="name" />
